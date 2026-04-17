@@ -1,17 +1,19 @@
+# .NET
 bin/
 obj/
+
+# Node tooling
+node_modules/
+
+# Editor / OS
+.vscode/
+.DS_Store
+
+# Build artifacts
+build/
+dist/
 publish/
-*.user
-*.vs/
-.vs
-*.suo
-*.vscode
+
+# Logs
 logs/
 *.log
-*.db
-.DS_Store
-TestResults/
-*.vspscc
-*.cache
-*.pdb
-*.msscci
