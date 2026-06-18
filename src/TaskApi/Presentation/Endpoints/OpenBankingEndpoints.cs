@@ -1,4 +1,5 @@
-using TaskApi.Application;
+using TaskApi.Application.Abstractions;
+using TaskApi.Application.Contracts;
 
 namespace TaskApi.Presentation.Endpoints;
 
@@ -7,12 +8,10 @@ public static class OpenBankingEndpoints
     public static IEndpointRouteBuilder MapOpenBankingEndpoints(this IEndpointRouteBuilder app)
     {
         app.MapGet("/health", () => Results.Ok(new HealthResponse("ok", DateTimeOffset.UtcNow)))
-            .WithName("GetHealth")
-            .WithOpenApi();
+            .WithName("GetHealth");
 
         var group = app.MapGroup("/open-banking/v1")
-            .WithTags("Open Banking")
-            .WithOpenApi();
+            .WithTags("Open Banking");
 
         group.MapGet("/accounts", (int? pageSize, string? cursor, IOpenBankingService service) =>
         {

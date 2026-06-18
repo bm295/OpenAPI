@@ -1,4 +1,4 @@
-using TaskApi.Application;
+using TaskApi.Application.Abstractions;
 using TaskApi.Domain;
 
 namespace TaskApi.Infrastructure;

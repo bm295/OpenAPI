@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
-using TaskApi.Application;
+using TaskApi.Application.Abstractions;
+using TaskApi.Application.Services;
 using TaskApi.Infrastructure;
 using TaskApi.Presentation.Endpoints;
 
