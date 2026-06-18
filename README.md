@@ -18,14 +18,32 @@ This repository contains a runnable **C# 10** ASP.NET Core API project that expo
 
 ## Run the API
 
+1. Restore dependencies:
+
 ```bash
 dotnet restore OpenAPI.sln
+```
+
+2. Start the API:
+
+```bash
 dotnet run --project src/TaskApi/TaskApi.csproj
 ```
 
-When running in development, the app serves OpenAPI JSON at:
+3. Open the browser page:
 
-- `http://localhost:5000/openapi/v1.json` (or your configured port)
+- `https://localhost:65347/`
+- or `http://localhost:65348/`
+
+The root URL redirects to the Swagger UI page at:
+
+- `/swagger/index.html`
+
+The OpenAPI document is available at:
+
+- `/openapi/v1.json`
+
+If your local ports differ, use the values printed by `dotnet run`.
 
 ## Endpoints
 

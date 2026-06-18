@@ -6,7 +6,7 @@ obj/
 node_modules/
 
 # Editor / OS
-.vscode/
+.vs/
 .DS_Store
 
 # Build artifacts
