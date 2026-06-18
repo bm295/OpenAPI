@@ -1,21 +1,24 @@
 openapi: 3.1.0
 info:
-  title: Task Management API
+  title: Open Banking API
   version: 1.0.0
-  summary: Contract-first API for tracking personal or team tasks.
+  summary: Open Banking-style contract for account information, consent, and payment initiation.
   description: |
-    This OpenAPI document defines a small but production-ready task service.
-    It demonstrates reusable component schemas, standardized error handling,
-    and cursor-based pagination for list endpoints.
+    This OpenAPI document defines a small Open Banking-style service. It demonstrates
+    account information endpoints, balance and transaction access, consent lifecycle
+    operations, payment initiation, reusable component schemas, standardized errors,
+    and cursor-based pagination.
 servers:
-  - url: https://api.example.com/v1
+  - url: https://api.example.com/open-banking/v1
     description: Production
-  - url: https://sandbox-api.example.com/v1
+  - url: https://sandbox-api.example.com/open-banking/v1
     description: Sandbox
 
 tags:
   - name: System
-  - name: Tasks
+  - name: Accounts
+  - name: Consents
+  - name: Payments
 
 paths:
   /health:
@@ -31,133 +34,217 @@ paths:
               schema:
                 $ref: '#/components/schemas/HealthStatus'
 
-  /tasks:
+  /accounts:
     get:
-      tags: [Tasks]
-      summary: List tasks
-      operationId: listTasks
+      tags: [Accounts]
+      summary: List accounts
+      operationId: listAccounts
+      parameters:
+        - $ref: '#/components/parameters/CursorParam'
+        - $ref: '#/components/parameters/PageSizeParam'
+      responses:
+        '200':
+          description: A paginated list of accounts.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountListResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /accounts/{accountId}:
+    parameters:
+      - $ref: '#/components/parameters/AccountIdPathParam'
+    get:
+      tags: [Accounts]
+      summary: Get account by id
+      operationId: getAccountById
+      responses:
+        '200':
+          description: Account found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /accounts/{accountId}/balances:
+    parameters:
+      - $ref: '#/components/parameters/AccountIdPathParam'
+    get:
+      tags: [Accounts]
+      summary: Get account balance
+      operationId: getAccountBalance
+      responses:
+        '200':
+          description: Account balance found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Balance'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /accounts/{accountId}/transactions:
+    parameters:
+      - $ref: '#/components/parameters/AccountIdPathParam'
+    get:
+      tags: [Accounts]
+      summary: List account transactions
+      operationId: listAccountTransactions
       parameters:
         - $ref: '#/components/parameters/CursorParam'
         - $ref: '#/components/parameters/PageSizeParam'
         - in: query
-          name: status
-          description: Filter by task status.
+          name: from
           schema:
-            $ref: '#/components/schemas/TaskStatus'
+            type: string
+            format: date-time
+        - in: query
+          name: to
+          schema:
+            type: string
+            format: date-time
       responses:
         '200':
-          description: A paginated list of tasks.
+          description: A paginated list of transactions.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TaskListResponse'
+                $ref: '#/components/schemas/TransactionListResponse'
         '400':
           $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
 
+  /consents:
     post:
-      tags: [Tasks]
-      summary: Create task
-      operationId: createTask
+      tags: [Consents]
+      summary: Create account access consent
+      operationId: createConsent
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateTaskRequest'
-            example:
-              title: "Prepare monthly report"
-              description: "Aggregate metrics and send summary to stakeholders."
-              dueAt: "2026-04-22T18:00:00Z"
+              $ref: '#/components/schemas/CreateConsentRequest'
       responses:
         '201':
-          description: Task created.
+          description: Consent created.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Task'
+                $ref: '#/components/schemas/Consent'
         '400':
           $ref: '#/components/responses/BadRequest'
 
-  /tasks/{taskId}:
+  /consents/{consentId}:
     parameters:
-      - $ref: '#/components/parameters/TaskIdPathParam'
-
+      - $ref: '#/components/parameters/ConsentIdPathParam'
     get:
-      tags: [Tasks]
-      summary: Get task by id
-      operationId: getTaskById
+      tags: [Consents]
+      summary: Get consent by id
+      operationId: getConsentById
       responses:
         '200':
-          description: Task found.
+          description: Consent found.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Task'
+                $ref: '#/components/schemas/Consent'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      tags: [Consents]
+      summary: Revoke consent
+      operationId: revokeConsent
+      responses:
+        '200':
+          description: Consent revoked.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Consent'
         '404':
           $ref: '#/components/responses/NotFound'
 
-    patch:
-      tags: [Tasks]
-      summary: Update task
-      operationId: updateTask
+  /payments:
+    post:
+      tags: [Payments]
+      summary: Initiate payment
+      operationId: createPayment
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateTaskRequest'
+              $ref: '#/components/schemas/CreatePaymentRequest'
       responses:
-        '200':
-          description: Task updated.
+        '201':
+          description: Payment instruction created.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Task'
+                $ref: '#/components/schemas/PaymentInstruction'
         '400':
           $ref: '#/components/responses/BadRequest'
-        '404':
-          $ref: '#/components/responses/NotFound'
 
-    delete:
-      tags: [Tasks]
-      summary: Delete task
-      operationId: deleteTask
+  /payments/{paymentId}:
+    parameters:
+      - $ref: '#/components/parameters/PaymentIdPathParam'
+    get:
+      tags: [Payments]
+      summary: Get payment by id
+      operationId: getPaymentById
       responses:
-        '204':
-          description: Task deleted.
+        '200':
+          description: Payment found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentInstruction'
         '404':
           $ref: '#/components/responses/NotFound'
 
 components:
   parameters:
-    TaskIdPathParam:
+    AccountIdPathParam:
       in: path
-      name: taskId
+      name: accountId
       required: true
-      description: Unique identifier for a task.
       schema:
         type: string
         format: uuid
-
+    ConsentIdPathParam:
+      in: path
+      name: consentId
+      required: true
+      schema:
+        type: string
+        format: uuid
+    PaymentIdPathParam:
+      in: path
+      name: paymentId
+      required: true
+      schema:
+        type: string
+        format: uuid
     CursorParam:
       in: query
       name: cursor
       required: false
-      description: Cursor token from a prior list response.
       schema:
         type: string
-
     PageSizeParam:
       in: query
       name: pageSize
       required: false
-      description: Number of records to return.
       schema:
         type: integer
         minimum: 1
         maximum: 100
         default: 25
-
   responses:
     BadRequest:
       description: Invalid request payload or query parameters.
@@ -171,7 +258,6 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
-
   schemas:
     HealthStatus:
       type: object
@@ -183,102 +269,196 @@ components:
         timestamp:
           type: string
           format: date-time
-
-    TaskStatus:
-      type: string
-      enum: [todo, in_progress, done]
-
-    Task:
+    Money:
       type: object
-      required: [id, title, status, createdAt, updatedAt]
+      required: [amount, currency]
+      properties:
+        amount:
+          type: number
+          format: decimal
+        currency:
+          type: string
+          minLength: 3
+          maxLength: 3
+    Account:
+      type: object
+      required: [id, bankId, accountNumberMasked, displayName, type, status, currency, createdAt]
       properties:
         id:
           type: string
           format: uuid
-        title:
+        bankId:
           type: string
-          minLength: 1
-          maxLength: 120
+        accountNumberMasked:
+          type: string
+        displayName:
+          type: string
+        type:
+          type: string
+          enum: [Current, Savings, CreditCard]
+        status:
+          type: string
+          enum: [Enabled, Disabled]
+        currency:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+    Balance:
+      type: object
+      required: [accountId, available, current, asOf]
+      properties:
+        accountId:
+          type: string
+          format: uuid
+        available:
+          $ref: '#/components/schemas/Money'
+        current:
+          $ref: '#/components/schemas/Money'
+        asOf:
+          type: string
+          format: date-time
+    Transaction:
+      type: object
+      required: [id, accountId, bookedAt, description, merchantName, amount, category, reference]
+      properties:
+        id:
+          type: string
+          format: uuid
+        accountId:
+          type: string
+          format: uuid
+        bookedAt:
+          type: string
+          format: date-time
         description:
           type: string
-          maxLength: 2000
+        merchantName:
+          type: string
+        amount:
+          $ref: '#/components/schemas/Money'
+        category:
+          type: string
+        reference:
+          type: string
+    Consent:
+      type: object
+      required: [id, customerId, permissions, status, expiresAt, createdAt]
+      properties:
+        id:
+          type: string
+          format: uuid
+        customerId:
+          type: string
+        permissions:
+          type: array
+          items:
+            type: string
         status:
-          $ref: '#/components/schemas/TaskStatus'
-        dueAt:
+          type: string
+          enum: [AwaitingAuthorization, Authorized, Revoked, Expired]
+        expiresAt:
           type: string
           format: date-time
         createdAt:
           type: string
           format: date-time
-        updatedAt:
-          type: string
-          format: date-time
-
-    CreateTaskRequest:
+    PaymentInstruction:
       type: object
-      required: [title]
+      required: [id, consentId, debtorAccountId, creditorAccountNumber, creditorName, amount, remittanceInformation, status, createdAt]
       properties:
-        title:
+        id:
           type: string
-          minLength: 1
-          maxLength: 120
-        description:
+          format: uuid
+        consentId:
           type: string
-          maxLength: 2000
-        dueAt:
+          format: uuid
+        debtorAccountId:
           type: string
-          format: date-time
-      additionalProperties: false
-
-    UpdateTaskRequest:
-      type: object
-      properties:
-        title:
+        creditorAccountNumber:
           type: string
-          minLength: 1
-          maxLength: 120
-        description:
+        creditorName:
           type: string
-          maxLength: 2000
+        amount:
+          $ref: '#/components/schemas/Money'
+        remittanceInformation:
+          type: string
         status:
-          $ref: '#/components/schemas/TaskStatus'
-        dueAt:
+          type: string
+          enum: [Pending, Accepted, Rejected]
+        createdAt:
+          type: string
+          format: date-time
+    CreateConsentRequest:
+      type: object
+      required: [customerId, permissions, expiresAt]
+      properties:
+        customerId:
+          type: string
+        permissions:
+          type: array
+          minItems: 1
+          items:
+            type: string
+        expiresAt:
           type: string
           format: date-time
       additionalProperties: false
-      minProperties: 1
-
-    TaskListResponse:
+    CreatePaymentRequest:
+      type: object
+      required: [consentId, debtorAccountId, creditorAccountNumber, creditorName, amount, remittanceInformation]
+      properties:
+        consentId:
+          type: string
+          format: uuid
+        debtorAccountId:
+          type: string
+        creditorAccountNumber:
+          type: string
+        creditorName:
+          type: string
+        amount:
+          $ref: '#/components/schemas/Money'
+        remittanceInformation:
+          type: string
+      additionalProperties: false
+    AccountListResponse:
       type: object
       required: [data]
       properties:
         data:
           type: array
           items:
-            $ref: '#/components/schemas/Task'
+            $ref: '#/components/schemas/Account'
         nextCursor:
           type: string
-          nullable: true
-
+    TransactionListResponse:
+      type: object
+      required: [data]
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Transaction'
+        nextCursor:
+          type: string
     ErrorResponse:
       type: object
-      required: [error]
+      required: [code, message]
       properties:
-        error:
-          type: object
-          required: [code, message]
-          properties:
-            code:
-              type: string
-              examples: [INVALID_REQUEST]
-            message:
-              type: string
-            details:
-              type: array
-              items:
-                type: object
-                properties:
-                  field:
-                    type: string
-                  issue:
-                    type: string
+        code:
+          type: string
+        message:
+          type: string
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    ErrorDetail:
+      type: object
+      required: [field, issue]
+      properties:
+        field:
+          type: string
+        issue:
+          type: string
