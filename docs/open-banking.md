@@ -124,10 +124,6 @@ The API returns structured error objects for common failures:
 - `403 Forbidden` when an Open Banking request includes an invalid API key.
 - `404 Not Found` when an account, consent, balance, transaction collection, or payment cannot be found.
 
-## OpenAPI contract
+## OpenAPI document
 
-The canonical OpenAPI 3.1 contract is stored at `openapi/openapi.yaml`. Validate it with:
-
-```bash
-./scripts/validate.sh
-```
+When the API runs in development, the generated OpenAPI document is available at `/openapi/v1.json`.

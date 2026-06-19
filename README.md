@@ -1,6 +1,6 @@
 # OpenAPI Sample Service
 
-A runnable ASP.NET Core minimal API that demonstrates how to pair a Clean Architecture-style C# service with a checked-in OpenAPI contract.
+A runnable ASP.NET Core minimal API that demonstrates a Clean Architecture-style C# service with runtime OpenAPI documentation.
 
 The sample domain is Open Banking: account information, consent management, and payment initiation. The root README focuses on getting the project running; the domain-specific behavior is documented in [docs/open-banking.md](docs/open-banking.md).
 
@@ -10,9 +10,7 @@ The sample domain is Open Banking: account information, consent management, and 
 - `global.json` — pins the .NET SDK to `10.0.100` with latest-feature roll-forward.
 - `src/TaskApi` — ASP.NET Core minimal API implementation.
 - `src/TaskApi/appsettings.json` — local configuration, including the demo Open Banking API key.
-- `openapi/openapi.yaml` — canonical OpenAPI 3.1 contract.
 - `examples/open-banking.payment.created.json` — sample payment initiation response.
-- `scripts/validate.sh` — Redocly-based OpenAPI validation helper.
 - `docs/open-banking.md` — Open Banking endpoint and behavior guide.
 
 ## Architecture
@@ -31,7 +29,6 @@ The service uses an in-memory store so the API can be restored and run without a
 ## Prerequisites
 
 - .NET SDK `10.0.100` or compatible later feature band.
-- Optional: Redocly CLI for OpenAPI linting. If it is not installed, `scripts/validate.sh` prints the install command.
 
 ## Quick start
 
@@ -72,14 +69,7 @@ The `/health`, `/swagger/index.html`, and development OpenAPI document endpoints
 
 - Swagger UI: `/swagger/index.html`
 - Runtime OpenAPI JSON: `/openapi/v1.json` in development
-- Source OpenAPI contract: `openapi/openapi.yaml`
 - Open Banking guide: [docs/open-banking.md](docs/open-banking.md)
-
-## Validate the OpenAPI contract
-
-```bash
-./scripts/validate.sh
-```
 
 ## Example payload
 
