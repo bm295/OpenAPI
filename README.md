@@ -1,67 +1,92 @@
-# Open Banking API — Clean Architecture + C# Project
+# OpenAPI Sample Service
 
-This repository contains a runnable **C# 10** ASP.NET Core API project that exposes an Open Banking-style service and documents it with OpenAPI.
+A runnable ASP.NET Core minimal API that demonstrates how to pair a Clean Architecture-style C# service with a checked-in OpenAPI contract.
 
-> As of **April 17, 2026**, .NET 14 is not released. This project targets **.NET 10** while locking language features to **C# 10**.
+The sample domain is Open Banking: account information, consent management, and payment initiation. The root README focuses on getting the project running; the domain-specific behavior is documented in [docs/open-banking.md](docs/open-banking.md).
 
-## Project Layout
+## What is included
 
-- `OpenAPI.sln` — solution file.
-- `src/TaskApi` — ASP.NET Core minimal API implementation organized with Clean Architecture folders:
-  - `Domain` — Open Banking domain records and enums.
-  - `Application` — use-case contracts, service interface, and service implementation.
-  - `Infrastructure` — in-memory data store seeded with demo banking data.
-  - `Presentation` — HTTP endpoint mapping and request validation.
-- `openapi/openapi.yaml` — canonical API contract.
-- `examples/open-banking.payment.created.json` — sample payment initiation response payload.
-- `scripts/validate.sh` — OpenAPI lint helper.
+- `OpenAPI.sln` — solution entry point.
+- `global.json` — pins the .NET SDK to `10.0.100` with latest-feature roll-forward.
+- `src/TaskApi` — ASP.NET Core minimal API implementation.
+- `src/TaskApi/appsettings.json` — local configuration, including the demo Open Banking API key.
+- `openapi/openapi.yaml` — canonical OpenAPI 3.1 contract.
+- `examples/open-banking.payment.created.json` — sample payment initiation response.
+- `scripts/validate.sh` — Redocly-based OpenAPI validation helper.
+- `docs/open-banking.md` — Open Banking endpoint and behavior guide.
 
-## Run the API
+## Architecture
 
-1. Restore dependencies:
+The API code is organized by responsibility under `src/TaskApi`:
+
+| Area | Purpose |
+| --- | --- |
+| `Domain` | Core Open Banking records and enums. |
+| `Application` | Service interfaces, contracts, and application logic. |
+| `Infrastructure` | In-memory data store seeded with demo banking data. |
+| `Presentation` | HTTP endpoint mapping and request validation. |
+
+The service uses an in-memory store so the API can be restored and run without a database or external dependencies.
+
+## Prerequisites
+
+- .NET SDK `10.0.100` or compatible later feature band.
+- Optional: Redocly CLI for OpenAPI linting. If it is not installed, `scripts/validate.sh` prints the install command.
+
+## Quick start
+
+Restore dependencies:
 
 ```bash
 dotnet restore OpenAPI.sln
 ```
 
-2. Start the API:
+Run the API:
 
 ```bash
 dotnet run --project src/TaskApi/TaskApi.csproj
 ```
 
-3. Open the browser page:
+Open the app:
 
 - `https://localhost:65347/`
-- or `http://localhost:65348/`
+- `http://localhost:65348/`
 
-The root URL redirects to the Swagger UI page at:
+The root URL redirects to the local Swagger UI at `/swagger/index.html`. If your local ports differ, use the addresses printed by `dotnet run`.
 
-- `/swagger/index.html`
+## Authorization
 
-The OpenAPI document is available at:
+Open Banking resource endpoints require a demo API key. Supply the configured key from `OpenBanking:ApiKey` using either header form:
 
-- `/openapi/v1.json`
+```bash
+curl -H "X-API-Key: dev-open-banking-key" http://localhost:65348/open-banking/v1/accounts
+```
 
-If your local ports differ, use the values printed by `dotnet run`.
+```bash
+curl -H "Authorization: Bearer dev-open-banking-key" http://localhost:65348/open-banking/v1/accounts
+```
 
-## Endpoints
+The `/health`, `/swagger/index.html`, and development OpenAPI document endpoints remain public for local diagnostics and exploration.
 
-- `GET /health`
-- `GET /open-banking/v1/accounts`
-- `GET /open-banking/v1/accounts/{accountId}`
-- `GET /open-banking/v1/accounts/{accountId}/balances`
-- `GET /open-banking/v1/accounts/{accountId}/transactions`
-- `POST /open-banking/v1/consents`
-- `GET /open-banking/v1/consents/{consentId}`
-- `DELETE /open-banking/v1/consents/{consentId}`
-- `POST /open-banking/v1/payments`
-- `GET /open-banking/v1/payments/{paymentId}`
+## API documents
 
-## OpenAPI Validation
+- Swagger UI: `/swagger/index.html`
+- Runtime OpenAPI JSON: `/openapi/v1.json` in development
+- Source OpenAPI contract: `openapi/openapi.yaml`
+- Open Banking guide: [docs/open-banking.md](docs/open-banking.md)
+
+## Validate the OpenAPI contract
 
 ```bash
 ./scripts/validate.sh
 ```
 
-If `redocly` is not installed, the script prints the install command.
+## Example payload
+
+A sample payment-created response is available at:
+
+```text
+examples/open-banking.payment.created.json
+```
+
+Use it as a quick reference for response shape while working with payment initiation.

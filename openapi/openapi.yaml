@@ -20,9 +20,13 @@ tags:
   - name: Consents
   - name: Payments
 
+security:
+  - ApiKeyAuth: []
+
 paths:
   /health:
     get:
+      security: []
       tags: [System]
       summary: Health check
       operationId: getHealth
@@ -51,6 +55,10 @@ paths:
                 $ref: '#/components/schemas/AccountListResponse'
         '400':
           $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
 
   /accounts/{accountId}:
     parameters:
@@ -66,6 +74,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Account'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
 
@@ -83,6 +95,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Balance'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
 
@@ -115,6 +131,10 @@ paths:
                 $ref: '#/components/schemas/TransactionListResponse'
         '400':
           $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
 
@@ -138,6 +158,10 @@ paths:
                 $ref: '#/components/schemas/Consent'
         '400':
           $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
 
   /consents/{consentId}:
     parameters:
@@ -153,6 +177,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Consent'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
     delete:
@@ -166,6 +194,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Consent'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
 
@@ -189,6 +221,10 @@ paths:
                 $ref: '#/components/schemas/PaymentInstruction'
         '400':
           $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
 
   /payments/{paymentId}:
     parameters:
@@ -204,10 +240,20 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PaymentInstruction'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
 
 components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: Demo API key required for Open Banking resource endpoints. The same key may also be supplied as an Authorization Bearer token by the running sample API.
   parameters:
     AccountIdPathParam:
       in: path
@@ -248,6 +294,18 @@ components:
   responses:
     BadRequest:
       description: Invalid request payload or query parameters.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: API key is missing.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Forbidden:
+      description: API key is invalid or not authorized.
       content:
         application/json:
           schema:

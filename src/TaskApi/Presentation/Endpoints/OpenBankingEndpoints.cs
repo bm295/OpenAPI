@@ -1,5 +1,6 @@
 using TaskApi.Application.Abstractions;
 using TaskApi.Application.Contracts;
+using TaskApi.Presentation.Security;
 
 namespace TaskApi.Presentation.Endpoints;
 
@@ -11,7 +12,8 @@ public static class OpenBankingEndpoints
             .WithName("GetHealth");
 
         var group = app.MapGroup("/open-banking/v1")
-            .WithTags("Open Banking");
+            .WithTags("Open Banking")
+            .AddEndpointFilter<ApiKeyAuthorizationFilter>();
 
         group.MapGet("/accounts", (int? pageSize, string? cursor, IOpenBankingService service) =>
         {
