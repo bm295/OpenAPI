@@ -21,23 +21,23 @@ This checklist breaks the work into very small, concrete tasks for turning the c
 
 ## Developer setup docs
 
-- [ ] Create `docs/getting-started.md`.
-- [ ] Add a `.NET SDK` prerequisite section to `docs/getting-started.md`.
-- [ ] Add `dotnet restore OpenAPI.sln` to `docs/getting-started.md`.
-- [ ] Add `dotnet run --project src/TaskApi/TaskApi.csproj` to `docs/getting-started.md`.
-- [ ] Add a `Verify health` step using `GET /health` to `docs/getting-started.md`.
-- [ ] Add a `Verify authorization` step using `X-API-Key` to `docs/getting-started.md`.
-- [ ] Add a `Troubleshooting missing .NET SDK` section to `docs/getting-started.md`.
-- [ ] Add a `Troubleshooting port conflicts` section to `docs/getting-started.md`.
-- [ ] Add a `Troubleshooting 401 and 403 responses` section to `docs/getting-started.md`.
-- [ ] Add a `docs/http-examples.md` file.
-- [ ] Add a curl example for `GET /open-banking/v1/accounts` to `docs/http-examples.md`.
-- [ ] Add a curl example for `GET /open-banking/v1/accounts/{accountId}` to `docs/http-examples.md`.
-- [ ] Add a curl example for `GET /open-banking/v1/accounts/{accountId}/balances` to `docs/http-examples.md`.
-- [ ] Add a curl example for `GET /open-banking/v1/accounts/{accountId}/transactions` to `docs/http-examples.md`.
-- [ ] Add a curl example for `POST /open-banking/v1/consents` to `docs/http-examples.md`.
-- [ ] Add a curl example for `DELETE /open-banking/v1/consents/{consentId}` to `docs/http-examples.md`.
-- [ ] Add a curl example for `POST /open-banking/v1/payments` to `docs/http-examples.md`.
+- [x] Create `docs/getting-started.md`.
+- [x] Add a `.NET SDK` prerequisite section to `docs/getting-started.md`.
+- [x] Add `dotnet restore OpenAPI.sln` to `docs/getting-started.md`.
+- [x] Add `dotnet run --project src/TaskApi/TaskApi.csproj` to `docs/getting-started.md`.
+- [x] Add a `Verify health` step using `GET /health` to `docs/getting-started.md`.
+- [x] Add a `Verify authorization` step using `X-API-Key` to `docs/getting-started.md`.
+- [x] Add a `Troubleshooting missing .NET SDK` section to `docs/getting-started.md`.
+- [x] Add a `Troubleshooting port conflicts` section to `docs/getting-started.md`.
+- [x] Add a `Troubleshooting 401 and 403 responses` section to `docs/getting-started.md`.
+- [x] Add a `docs/http-examples.md` file.
+- [x] Add a curl example for `GET /open-banking/v1/accounts` to `docs/http-examples.md`.
+- [x] Add a curl example for `GET /open-banking/v1/accounts/{accountId}` to `docs/http-examples.md`.
+- [x] Add a curl example for `GET /open-banking/v1/accounts/{accountId}/balances` to `docs/http-examples.md`.
+- [x] Add a curl example for `GET /open-banking/v1/accounts/{accountId}/transactions` to `docs/http-examples.md`.
+- [x] Add a curl example for `POST /open-banking/v1/consents` to `docs/http-examples.md`.
+- [x] Add a curl example for `DELETE /open-banking/v1/consents/{consentId}` to `docs/http-examples.md`.
+- [x] Add a curl example for `POST /open-banking/v1/payments` to `docs/http-examples.md`.
 
 ## Domain model improvements
 
