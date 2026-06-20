@@ -4,20 +4,20 @@ This checklist breaks the work into very small, concrete tasks for turning the c
 
 ## Product positioning docs
 
-- [ ] Create `docs/product-overview.md`.
-- [ ] Add a `# Product Overview` heading to `docs/product-overview.md`.
-- [ ] Add a one-sentence product positioning statement to `docs/product-overview.md`.
-- [ ] Add a `Target customers` section to `docs/product-overview.md`.
-- [ ] Add a `Primary use cases` section to `docs/product-overview.md`.
-- [ ] Add a `Current limitations` section to `docs/product-overview.md`.
-- [ ] Add a `Production readiness` section to `docs/product-overview.md`.
-- [ ] Add a link from `README.md` to `docs/product-overview.md`.
-- [ ] Add a `Who this is for` section to `README.md`.
-- [ ] Add a `Who this is not for` section to `README.md`.
-- [ ] Add a `Roadmap` section to `README.md`.
-- [ ] Add a production-readiness disclaimer to `README.md`.
-- [ ] Add a `docs/glossary.md` file.
-- [ ] Define `Account`, `Balance`, `Transaction`, `Consent`, `Payment instruction`, and `OpenAPI` in `docs/glossary.md`.
+- [x] Create `docs/product-overview.md`.
+- [x] Add a `# Product Overview` heading to `docs/product-overview.md`.
+- [x] Add a one-sentence product positioning statement to `docs/product-overview.md`.
+- [x] Add a `Target customers` section to `docs/product-overview.md`.
+- [x] Add a `Primary use cases` section to `docs/product-overview.md`.
+- [x] Add a `Current limitations` section to `docs/product-overview.md`.
+- [x] Add a `Production readiness` section to `docs/product-overview.md`.
+- [x] Add a link from `README.md` to `docs/product-overview.md`.
+- [x] Add a `Who this is for` section to `README.md`.
+- [x] Add a `Who this is not for` section to `README.md`.
+- [x] Add a `Roadmap` section to `README.md`.
+- [x] Add a production-readiness disclaimer to `README.md`.
+- [x] Add a `docs/glossary.md` file.
+- [x] Define `Account`, `Balance`, `Transaction`, `Consent`, `Payment instruction`, and `OpenAPI` in `docs/glossary.md`.
 
 ## Developer setup docs
 
