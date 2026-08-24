@@ -142,18 +142,18 @@ This checklist breaks the work into very small, concrete tasks for turning the c
 
 ## Endpoint classes
 
-- [ ] Create `src/TaskApi/Presentation/Endpoints/HealthEndpoints.cs`.
-- [ ] Move the `GET /health` endpoint from `OpenBankingEndpoints` to `HealthEndpoints`.
-- [ ] Create `src/TaskApi/Presentation/Endpoints/AccountEndpoints.cs`.
-- [ ] Move account endpoints from `OpenBankingEndpoints` into `AccountEndpoints`.
-- [ ] Create `src/TaskApi/Presentation/Endpoints/ConsentEndpoints.cs`.
-- [ ] Move consent endpoints from `OpenBankingEndpoints` into `ConsentEndpoints`.
+- [x] Create `src/TaskApi/Presentation/Endpoints/HealthEndpoints.cs`.
+- [x] Move the `GET /health` endpoint from `OpenBankingEndpoints` to `HealthEndpoints`.
+- [x] Create `src/TaskApi/Presentation/Endpoints/AccountEndpoints.cs`.
+- [x] Move account endpoints from `OpenBankingEndpoints` into `AccountEndpoints`.
+- [x] Create `src/TaskApi/Presentation/Endpoints/ConsentEndpoints.cs`.
+- [x] Move consent endpoints from `OpenBankingEndpoints` into `ConsentEndpoints`.
 - [ ] Add `POST /open-banking/v1/consents/{consentId}/authorize` to `ConsentEndpoints`.
-- [ ] Create `src/TaskApi/Presentation/Endpoints/PaymentEndpoints.cs`.
-- [ ] Move payment endpoints from `OpenBankingEndpoints` into `PaymentEndpoints`.
+- [x] Create `src/TaskApi/Presentation/Endpoints/PaymentEndpoints.cs`.
+- [x] Move payment endpoints from `OpenBankingEndpoints` into `PaymentEndpoints`.
 - [ ] Add `GET /open-banking/v1/payments/{paymentId}/status` to `PaymentEndpoints`.
-- [ ] Create `src/TaskApi/Presentation/Endpoints/EndpointValidation.cs`.
-- [ ] Move `ValidatePageSize` into `EndpointValidation`.
+- [x] Create `src/TaskApi/Presentation/Endpoints/EndpointValidation.cs`.
+- [x] Move `ValidatePageSize` into `EndpointValidation`.
 - [ ] Add `ValidateDateRange` to `EndpointValidation`.
 - [ ] Add `ValidateRequiredString` to `EndpointValidation`.
 - [ ] Add `ValidateMoney` to `EndpointValidation`.
@@ -229,10 +229,10 @@ This checklist breaks the work into very small, concrete tasks for turning the c
 - [ ] Add `InvokeAsync_Returns401WhenApiKeyMissing` to `ApiKeyAuthorizationFilterTests`.
 - [ ] Add `InvokeAsync_Returns403WhenApiKeyInvalid` to `ApiKeyAuthorizationFilterTests`.
 - [ ] Add `InvokeAsync_CallsNextWhenApiKeyValid` to `ApiKeyAuthorizationFilterTests`.
-- [ ] Add `tests/TaskApi.Tests/Presentation/Endpoints/OpenBankingEndpointTests.cs`.
-- [ ] Add an integration test for `GET /health`.
-- [ ] Add an integration test for `GET /open-banking/v1/accounts` with a valid key.
-- [ ] Add an integration test for `GET /open-banking/v1/accounts` without a key.
+- [x] Add `tests/TaskApi.Tests/Presentation/Endpoints/OpenBankingEndpointTests.cs`.
+- [x] Add an integration test for `GET /health`.
+- [x] Add an integration test for `GET /open-banking/v1/accounts` with a valid key.
+- [x] Add an integration test for `GET /open-banking/v1/accounts` without a key.
 - [ ] Add an integration test for `POST /open-banking/v1/payments` with an unauthorized consent.
 
 ## Operations and deployment
