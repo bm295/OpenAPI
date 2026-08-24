@@ -8,7 +8,7 @@ public static class OpenBankingEndpoints
 {
     public static IEndpointRouteBuilder MapOpenBankingEndpoints(this IEndpointRouteBuilder app)
     {
-        app.MapGet("/health", () => Results.Ok(new HealthResponse("ok", DateTimeOffset.UtcNow)))
+        app.MapGet("/health", (TimeProvider timeProvider) => Results.Ok(new HealthResponse("ok", timeProvider.GetUtcNow())))
             .WithName("GetHealth");
 
         var group = app.MapGroup("/open-banking/v1")
@@ -68,7 +68,7 @@ public static class OpenBankingEndpoints
         })
         .WithName("ListAccountTransactions");
 
-        group.MapPost("/consents", (CreateConsentRequest request, IOpenBankingService service) =>
+        group.MapPost("/consents", (CreateConsentRequest request, IOpenBankingService service, TimeProvider timeProvider) =>
         {
             if (string.IsNullOrWhiteSpace(request.CustomerId))
             {
@@ -86,7 +86,7 @@ public static class OpenBankingEndpoints
                     new[] { new ErrorDetail("permissions", "Cannot be empty") }));
             }
 
-            if (request.ExpiresAt <= DateTimeOffset.UtcNow)
+            if (request.ExpiresAt <= timeProvider.GetUtcNow())
             {
                 return Results.BadRequest(new ErrorResponse(
                     "INVALID_REQUEST",

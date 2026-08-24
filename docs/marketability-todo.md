@@ -211,7 +211,7 @@ This checklist breaks the work into very small, concrete tasks for turning the c
 
 ## Testing tasks
 
-- [ ] Create `tests/TaskApi.Tests/TaskApi.Tests.csproj`.
+- [x] Create `tests/TaskApi.Tests/TaskApi.Tests.csproj`.
 - [ ] Add `tests/TaskApi.Tests/Application/Services/AccountServiceTests.cs`.
 - [ ] Add `ListAccounts_ReturnsPagedAccounts` to `AccountServiceTests`.
 - [ ] Add `GetAccount_ReturnsNullForUnknownAccount` to `AccountServiceTests`.

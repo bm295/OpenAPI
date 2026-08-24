@@ -7,20 +7,22 @@ namespace TaskApi.Application.Services;
 public sealed class OpenBankingService : IOpenBankingService
 {
     private readonly IOpenBankingStore _store;
+    private readonly TimeProvider _timeProvider;
 
-    public OpenBankingService(IOpenBankingStore store)
+    public OpenBankingService(IOpenBankingStore store, TimeProvider timeProvider)
     {
         _store = store;
+        _timeProvider = timeProvider;
     }
 
     public PagedResponse<Account> ListAccounts(int pageSize, string? cursor)
     {
-        return Page(_store.Accounts.OrderBy(account => account.DisplayName), pageSize, cursor);
+        return Page(_store.ListAccounts().OrderBy(account => account.DisplayName), pageSize, cursor);
     }
 
-    public Account? GetAccount(Guid accountId) => _store.Accounts.FirstOrDefault(account => account.Id == accountId);
+    public Account? GetAccount(Guid accountId) => _store.FindAccount(accountId);
 
-    public Balance? GetBalance(Guid accountId) => _store.Balances.FirstOrDefault(balance => balance.AccountId == accountId);
+    public Balance? GetBalance(Guid accountId) => _store.FindBalance(accountId);
 
     public PagedResponse<Transaction>? ListTransactions(Guid accountId, DateTimeOffset? from, DateTimeOffset? to, int pageSize, string? cursor)
     {
@@ -29,7 +31,7 @@ public sealed class OpenBankingService : IOpenBankingService
             return null;
         }
 
-        var query = _store.Transactions.Where(transaction => transaction.AccountId == accountId);
+        var query = _store.ListTransactions(accountId).AsEnumerable();
 
         if (from is not null)
         {
@@ -46,7 +48,7 @@ public sealed class OpenBankingService : IOpenBankingService
 
     public Consent CreateConsent(CreateConsentRequest request)
     {
-        var now = DateTimeOffset.UtcNow;
+        var now = _timeProvider.GetUtcNow();
         var consent = new Consent(
             Guid.NewGuid(),
             request.CustomerId.Trim(),
@@ -55,27 +57,29 @@ public sealed class OpenBankingService : IOpenBankingService
             request.ExpiresAt,
             now);
 
-        _store.Consents[consent.Id] = consent;
+        _store.SaveConsent(consent);
         return consent;
     }
 
-    public Consent? GetConsent(Guid consentId) => _store.Consents.TryGetValue(consentId, out var consent) ? consent : null;
+    public Consent? GetConsent(Guid consentId) => _store.FindConsent(consentId);
 
     public Consent? RevokeConsent(Guid consentId)
     {
-        if (!_store.Consents.TryGetValue(consentId, out var existing))
+        var existing = _store.FindConsent(consentId);
+        if (existing is null)
         {
             return null;
         }
 
         var revoked = existing with { Status = ConsentStatus.Revoked };
-        _store.Consents[consentId] = revoked;
+        _store.SaveConsent(revoked);
         return revoked;
     }
 
     public PaymentInstruction? CreatePayment(CreatePaymentRequest request)
     {
-        if (!_store.Consents.TryGetValue(request.ConsentId, out var consent) || consent.Status is ConsentStatus.Revoked or ConsentStatus.Expired)
+        var consent = _store.FindConsent(request.ConsentId);
+        if (consent is null || consent.Status is ConsentStatus.Revoked or ConsentStatus.Expired)
         {
             return null;
         }
@@ -89,13 +93,13 @@ public sealed class OpenBankingService : IOpenBankingService
             request.Amount,
             request.RemittanceInformation.Trim(),
             PaymentStatus.Pending,
-            DateTimeOffset.UtcNow);
+            _timeProvider.GetUtcNow());
 
-        _store.Payments[payment.Id] = payment;
+        _store.SavePayment(payment);
         return payment;
     }
 
-    public PaymentInstruction? GetPayment(Guid paymentId) => _store.Payments.TryGetValue(paymentId, out var payment) ? payment : null;
+    public PaymentInstruction? GetPayment(Guid paymentId) => _store.FindPayment(paymentId);
 
     private static PagedResponse<T> Page<T>(IEnumerable<T> source, int pageSize, string? cursor)
     {

@@ -12,6 +12,7 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 });
 
 builder.Services.AddSingleton<IOpenBankingStore, InMemoryOpenBankingStore>();
+builder.Services.AddSingleton<TimeProvider>(TimeProvider.System);
 builder.Services.AddSingleton<IOpenBankingService, OpenBankingService>();
 builder.Services.AddOpenApi();
 
