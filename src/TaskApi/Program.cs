@@ -32,3 +32,5 @@ app.MapGet("/", () => Results.Redirect("/swagger/index.html"))
 app.MapOpenBankingEndpoints();
 
 app.Run();
+
+public partial class Program { }
