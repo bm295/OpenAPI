@@ -4,13 +4,19 @@ namespace TaskApi.Application.Abstractions;
 
 public interface IOpenBankingStore
 {
-    IReadOnlyCollection<Account> Accounts { get; }
+    IReadOnlyCollection<Account> ListAccounts();
 
-    IReadOnlyCollection<Balance> Balances { get; }
+    Account? FindAccount(Guid accountId);
 
-    IReadOnlyCollection<Transaction> Transactions { get; }
+    Balance? FindBalance(Guid accountId);
 
-    IDictionary<Guid, Consent> Consents { get; }
+    IReadOnlyCollection<Transaction> ListTransactions(Guid accountId);
 
-    IDictionary<Guid, PaymentInstruction> Payments { get; }
+    Consent? FindConsent(Guid consentId);
+
+    void SaveConsent(Consent consent);
+
+    PaymentInstruction? FindPayment(Guid paymentId);
+
+    void SavePayment(PaymentInstruction payment);
 }
