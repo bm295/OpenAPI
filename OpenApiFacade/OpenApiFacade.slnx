@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/OpenApiFacade/OpenApiFacade.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/OpenApiFacade.Tests/OpenApiFacade.Tests.csproj" />
+  </Folder>
+</Solution>
