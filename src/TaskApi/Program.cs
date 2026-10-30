@@ -14,6 +14,7 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 builder.Services.AddSingleton<IOpenBankingStore, InMemoryOpenBankingStore>();
 builder.Services.AddSingleton<TimeProvider>(TimeProvider.System);
 builder.Services.AddSingleton<IOpenBankingService, OpenBankingService>();
+builder.Services.AddSingleton<IBankingPredictionService, BankingPredictionService>();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
@@ -30,6 +31,7 @@ app.MapGet("/", () => Results.Redirect("/swagger/index.html"))
     .ExcludeFromDescription();
 
 app.MapOpenBankingEndpoints();
+app.MapBankingMlEndpoints();
 
 app.Run();
 

@@ -106,3 +106,22 @@ examples/open-banking.payment.created.json
 ```
 
 Use it as a quick reference for response shape while working with payment initiation.
+
+## Banking ML Lab: classification and regression
+
+The optional [Banking ML Lab](docs/ml-lab.md) provides two hands-on C#/ML.NET exercises:
+transaction category classification and transaction amount regression. It includes 2,000
+synthetic VND transactions, merchant-disjoint train/validation/test splits, baseline comparisons,
+error reports, serialized models and API predictions.
+
+From the repository root:
+
+```bash
+dotnet run --project tools/BankingMl.Trainer -- datasets/banking-ml/transactions.csv artifacts/banking-ml/demo-v1
+dotnet test OpenAPI.sln
+```
+
+Training writes a new model bundle; the API never trains models during requests.
+Configure `BankingMl:ModelDirectory` before using `POST /ml/v1/transactions/classify`
+or `POST /ml/v1/transactions/predict-amount`. Both require the existing demo API key.
+The existing Open Banking endpoints remain usable without trained models.

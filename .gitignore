@@ -17,3 +17,7 @@ publish/
 # Logs
 logs/
 *.log
+
+# Local ML model bundles and evaluation outputs
+artifacts/banking-ml/
+TestResults/
