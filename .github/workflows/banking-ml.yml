@@ -1,0 +1,24 @@
+name: Banking ML lab
+on:
+  push:
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - run: dotnet restore OpenAPI.sln
+      - run: dotnet build OpenAPI.sln --no-restore
+      - run: dotnet test OpenAPI.sln --no-build --logger "trx;LogFilePrefix=tests"
+      - run: dotnet run --project tools/BankingMl.Trainer --no-build -- datasets/banking-ml/transactions.csv artifacts/banking-ml/ci
+      - uses: actions/upload-artifact@v4
+        with:
+          name: banking-ml-evaluation
+          path: |
+            artifacts/banking-ml/ci/report.json
+            artifacts/banking-ml/ci/test-predictions.csv
+            **/TestResults/*.trx
