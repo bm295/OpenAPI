@@ -15,6 +15,10 @@ builder.Services.AddSingleton<IOpenBankingStore, InMemoryOpenBankingStore>();
 builder.Services.AddSingleton<TimeProvider>(TimeProvider.System);
 builder.Services.AddSingleton<IOpenBankingService, OpenBankingService>();
 builder.Services.AddSingleton<IBankingPredictionService, BankingPredictionService>();
+builder.Services.AddHttpClient<ILlmClient, TaskApi.Infrastructure.Llm.ChatCompletionClient>(client =>
+    client.Timeout = Timeout.InfiniteTimeSpan)
+    .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler { AllowAutoRedirect = false });
+builder.Services.AddTransient<TransactionExplanationService>();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
@@ -32,7 +36,9 @@ app.MapGet("/", () => Results.Redirect("/swagger/index.html"))
 
 app.MapOpenBankingEndpoints();
 app.MapBankingMlEndpoints();
+app.MapBankingLlmEndpoints();
 
 app.Run();
 
 public partial class Program { }
+

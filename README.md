@@ -125,3 +125,12 @@ Training writes a new model bundle; the API never trains models during requests.
 Configure `BankingMl:ModelDirectory` before using `POST /ml/v1/transactions/classify`
 or `POST /ml/v1/transactions/predict-amount`. Both require the existing demo API key.
 The existing Open Banking endpoints remain usable without trained models.
+
+
+## Banking LLM Lab
+
+[Banking LLM Lab](docs/llm-lab.md) adds `POST /ai/v1/transactions/explain`: the existing
+ML classifier predicts a category and a server-side LLM provides a short Vietnamese
+hypothesis explaining the category. Configure a trained ML bundle and `Llm__ApiKey` /
+`Llm__Model`; no credentials are committed. Includes timeout/cancellation, token usage,
+sanitary provider error responses, fake-based tests and CI.
